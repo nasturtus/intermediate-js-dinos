@@ -60,11 +60,26 @@ const createHumanObject = () => {
   return new Human(name, feet, inches, weight, diet);
 };
 
+// Event handlers
+
+const handleReset = () => {
+  location.reload();
+};
+
 const handleClick = (e, dinoObjects) => {
   e.preventDefault();
-  console.log("in handleSubmit");
+  console.log("in handleClick");
   const humanObject = createHumanObject();
   generateGrid(dinoObjects, humanObject);
+  const dinoCompareElem = document.getElementById("dino-compare");
+  dinoCompareElem.reset();
+  dinoCompareElem.style.display = "none";
+
+  const resetBtn = document.createElement("button");
+  resetBtn.setAttribute("id", "btn");
+  resetBtn.textContent = "Reset";
+  resetBtn.addEventListener("click", handleReset);
+  document.getElementById("grid").appendChild(resetBtn);
 };
 
 const generateGrid = (dinoObjects, humanObject) => {
@@ -79,18 +94,19 @@ const generateGrid = (dinoObjects, humanObject) => {
     let divElem = document.createElement("div");
     divElem.className = "grid-item";
 
+    let pElem = document.createElement("p");
     let imgElem = document.createElement("img");
-    imgElem.className = "grid-item";
 
     if (dino.species) {
       const species = dino.species;
-      divElem.innerText = species;
+      pElem.innerText = species;
       imgElem.src = `./images/${species}.png`;
     } else {
-      divElem.innerText = dino.name;
+      pElem.innerText = dino.name;
       imgElem.src = `./images/human.png`;
     }
 
+    divElem.appendChild(pElem);
     divElem.appendChild(imgElem);
     document.getElementById("grid").append(divElem);
   });
