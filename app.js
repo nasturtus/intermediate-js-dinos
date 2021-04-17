@@ -99,9 +99,9 @@ const compareWeight = (dinoObject, humanObject) => {
 
 const compareDiet = (dinoObject, humanObject) => {
   let str = "";
-  if (dinoObject.diet === humanObject.diet) {
+  if (dinoObject.diet === humanObject.diet.toLowerCase()) {
     str = `Nice. You are both ${dinoObject.diet}s. Now you can both share a meal :)`;
-  } else if (dinoObject.diet !== humanObject.diet) {
+  } else {
     str = `This one's a ${dinoObject.diet}. Your diet preferences simply don't match!`;
   }
   return str;
