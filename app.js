@@ -1,7 +1,5 @@
 // Get dino data
-
 const getDinoData = async () => {
-  console.log("in getDinoData");
   const dinoData = await fetch("./dino.json")
     .then((response) => response.json())
     .then((data) => data.Dinos);
@@ -31,7 +29,6 @@ class Human {
 }
 
 // Create human object based on data from form
-
 const createHumanObject = () => {
   const name = document.getElementById("name").value;
   const feet = document.getElementById("feet").value;
@@ -44,13 +41,14 @@ const createHumanObject = () => {
 
 // Event handlers
 
+// This event handler reloads on clicking 'Reset'.
 const handleReset = () => {
   location.reload();
 };
 
+// This event handler creates human object based on inputs and generates grid.
 const handleClick = (e, dinoObjects) => {
   e.preventDefault();
-  console.log("in handleClick");
 
   const humanObject = createHumanObject();
   generateGrid(dinoObjects, humanObject, methods);
@@ -65,10 +63,9 @@ const handleClick = (e, dinoObjects) => {
   document.getElementById("grid").appendChild(resetBtn);
 };
 
-// Various compare methods that return a comparison statement between dino and human
+// Various compare methods that return a comparison statement between dino and human.
 
 const compareHeight = (dinoObject, humanObject) => {
-  console.log("in compareHeight");
   let str = "";
   if (dinoObject.height > humanObject.feet) {
     str = `You are approx. ${
@@ -85,7 +82,6 @@ const compareHeight = (dinoObject, humanObject) => {
 };
 
 const compareWeight = (dinoObject, humanObject) => {
-  console.log("in compareHeight");
   let str = "";
   if (dinoObject.weight > humanObject.weight) {
     str = `You are approx. ${
@@ -111,15 +107,15 @@ const compareDiet = (dinoObject, humanObject) => {
   return str;
 };
 
-// the plain fact method returns dinosaur-specific plain fact
+// The plain fact method returns dinosaur-specific plain fact.
 
 const getPlainFact = (dinoObject) => {
   return dinoObject.fact;
 };
 
-// An array of compare methods and getPlainFact method to facilitate randomised selection
+// Global variables
 
-const methods = [[compareHeight, compareWeight, compareDiet], getPlainFact];
+const methods = [[compareHeight, compareWeight, compareDiet], getPlainFact]; // An array of compare methods and getPlainFact method to facilitate randomised selection
 let gridItemCount = 0;
 
 // The getChoice method randomly returns a binary value i.e. 0 or 1.
@@ -132,28 +128,19 @@ const getChoice = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-// Helper method that randomly calls compare methods or the getPlainFact method
-
-// (choice === 0 && methods[0].length !== 0) ||
-// (choice === 1 && gridItemCount === 7 && methods[0].length !== 0) ||
-// (choice === 1 && gridItemCount === 8 && methods[0].length === 1)
+// Important helper method that randomly calls a compare method or the getPlainFact method
+// and returns a comparison or factual string
 
 const generateSubtext = (dinoObject, humanObject) => {
-  console.log("In generateSubtext");
-
   if (!dinoObject.species) {
     // ...it's a human. So return empty string.
-    console.log("it's a human");
     return "";
   } else if (dinoObject.species === "pigeon") {
     // ...it's a pigeon. So return standard fact.
-    console.log("it's a pigeon");
     return dinoObject.fact;
   } else {
     // ... it's a dino, so randomly select comparison method or plain fact
-    console.log(`it's a ${dinoObject.species}`);
     const choice = getChoice(0, 1);
-    console.log(`The choice is ${choice}`);
     if (
       (choice === 0 && methods[0].length !== 0) ||
       (gridItemCount === 2 && methods[0].length === 3) ||
@@ -162,19 +149,19 @@ const generateSubtext = (dinoObject, humanObject) => {
     ) {
       const str = methods[0][0](dinoObject, humanObject);
       methods[0].shift();
-      console.log("Methods array is now: ", methods);
       return str;
     }
     return getPlainFact(dinoObject);
   }
 };
 
+// The method generates a 3 x 3 grid with populated content
+// and adds it to the DOM.
 const generateGrid = (dinoObjects, humanObject) => {
   const gridSize = 9;
   const humanObjectPosition = parseInt((gridSize / 2).toString());
 
   dinoObjects.splice(humanObjectPosition, 0, humanObject);
-  console.log(dinoObjects);
 
   dinoObjects.map((dino) => {
     let divElem = document.createElement("div");
@@ -201,6 +188,8 @@ const generateGrid = (dinoObjects, humanObject) => {
   });
 };
 
+// The first method called that loads all dino JSON data,
+// creates dino objects, and adds an event handler to 'Compare Me' button.
 const start = async () => {
   const dinoData = await getDinoData();
   const dinoObjects = [];
@@ -217,7 +206,6 @@ const start = async () => {
     );
   });
 
-  console.log(dinoObjects.map((dinoObject) => dinoObject));
   document
     .getElementById("btn")
     .addEventListener("click", (e) => handleClick(e, dinoObjects));
